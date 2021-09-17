@@ -4,8 +4,9 @@ import com.example.smartcar.location.Location;
 import com.example.smartcar.location.LocationRepository;
 import com.example.smartcar.location.LocationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.assertj.core.api.Assertions;
+//import org.assertj.core.api.Assertions;
 import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,10 +38,10 @@ public class VehicleInfoAddlServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    public void contextLoads() throws Exception {
-        Assertions.assertThat(vehicleInfoAddlService).isNotNull();
-    }
+//    @Test
+//    public void contextLoads() throws Exception {
+//        Assertions.assertThat(vehicleInfoAddlService).isNotNull();
+//    }
 
     @Test
     public void create_vehicle_info_addl_success() throws JsonProcessingException {
@@ -51,7 +52,7 @@ public class VehicleInfoAddlServiceTest {
         doReturn(vehicleInfoAddl).when(vehicleInfoAddlRepository).save(any());
         VehicleInfoAddl created = vehicleInfoAddlService.create("1D7HA18D64J249454"); //random valid vin because testing request
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created.getMakeA(), vehicleInfoAddl.getMakeA() );
+        Assertions.assertEquals(created.getMakeA(), vehicleInfoAddl.getMakeA() );
     }
 
     @Test
@@ -61,7 +62,7 @@ public class VehicleInfoAddlServiceTest {
         // when
         VehicleInfoAddl created = vehicleInfoAddlService.create("fasdg");
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created.getMakeA(), null );
+        Assertions.assertEquals(created.getMakeA(), null );
     }
 
     @Test
@@ -73,7 +74,7 @@ public class VehicleInfoAddlServiceTest {
         doReturn(Optional.ofNullable( vehicleInfoAddl)).when(vehicleInfoAddlRepository).findByVinA("1D7HA18D64J249454");
         Optional<VehicleInfoAddl> created = vehicleInfoAddlService.getVehicleInfoAddlByVinA("1D7HA18D64J249454");
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created.get(), vehicleInfoAddl );
+        Assertions.assertEquals(created.get(), vehicleInfoAddl );
     }
 
     @Test
@@ -83,7 +84,7 @@ public class VehicleInfoAddlServiceTest {
         // when
         Optional<VehicleInfoAddl> gotten = vehicleInfoAddlService.getVehicleInfoAddlByVinA("fasdg");
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(gotten,Optional.empty());
+        Assertions.assertEquals(gotten,Optional.empty());
     }
 
     @Test
@@ -95,7 +96,7 @@ public class VehicleInfoAddlServiceTest {
         doReturn(Optional.ofNullable( vehicleInfoAddl)).when(vehicleInfoAddlRepository).findById(1);
         Optional<VehicleInfoAddl> created = vehicleInfoAddlService.getVehicleInfoAddlById(1);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created.get(), vehicleInfoAddl );
+        Assertions.assertEquals(created.get(), vehicleInfoAddl );
     }
 
     @Test
@@ -105,9 +106,32 @@ public class VehicleInfoAddlServiceTest {
         // when
         Optional<VehicleInfoAddl> gotten = vehicleInfoAddlService.getVehicleInfoAddlById(1);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(gotten,Optional.empty());
+        Assertions.assertEquals(gotten,Optional.empty());
     }
 
+    @org.junit.Test
+    public void update_location_success() {
+        // given
+        Date date = new Date(System.currentTimeMillis());
+        VehicleInfoAddl vehicleInfoAddl = new VehicleInfoAddl(1,"1D7HA18D64J249454","DODGE", "Ram",2004,"FCA US LLC",null,"1500", "TRUCK","Pickup",null,null,"right",null,null,null,null,null,"Gasoline",null,"Fuel Delivery / Fuel Injection Type : SMPI, Sales Code:EZA",1,date,null,null,1,"a");
+        doReturn(vehicleInfoAddl).when(vehicleInfoAddlRepository).update(vehicleInfoAddl);
+        // when
+        VehicleInfoAddl gotten = vehicleInfoAddlService.updateVehicleInfoAddl(vehicleInfoAddl);
+        // then
+        Assertions.assertEquals(gotten,vehicleInfoAddl);
+    }
+
+    @org.junit.Test
+    public void update_location_fails() {
+        // given
+        Date date = new Date(System.currentTimeMillis());
+        VehicleInfoAddl vehicleInfoAddl = new VehicleInfoAddl(1,"1D7HA18D64J249454","DODGE", "Ram",2004,"FCA US LLC",null,"1500", "TRUCK","Pickup",null,null,"right",null,null,null,null,null,"Gasoline",null,"Fuel Delivery / Fuel Injection Type : SMPI, Sales Code:EZA",1,date,null,null,1,"a");
+        doReturn(null).when(vehicleInfoAddlRepository).update(vehicleInfoAddl);
+        // when
+        VehicleInfoAddl gotten = vehicleInfoAddlService.updateVehicleInfoAddl(vehicleInfoAddl);
+        // then
+        Assertions.assertEquals(gotten,null);
+    }
 
     @Test
     public void delete_location_success() {
@@ -118,7 +142,7 @@ public class VehicleInfoAddlServiceTest {
         doReturn(Optional.ofNullable(vehicleInfoAddl)).when(vehicleInfoAddlRepository).findById(vehicleInfoAddl.getId());
         String gotten = vehicleInfoAddlService.deleteById(vehicleInfoAddl.getId());
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(gotten,"Ok");
+        Assertions.assertEquals(gotten,"Ok");
     }
 
     @Test
@@ -128,7 +152,7 @@ public class VehicleInfoAddlServiceTest {
         // when
         String gotten = vehicleInfoAddlService.deleteById(173);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(gotten,"Error");
+        Assertions.assertEquals(gotten,"Error");
     }
 
 }

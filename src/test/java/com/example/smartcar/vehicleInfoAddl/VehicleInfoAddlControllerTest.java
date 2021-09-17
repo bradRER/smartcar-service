@@ -4,7 +4,7 @@ import com.example.smartcar.location.Location;
 import com.example.smartcar.location.LocationController;
 import com.example.smartcar.location.LocationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 //import org.junit.Test;
 import org.mockito.Mockito;
@@ -28,10 +28,10 @@ public class VehicleInfoAddlControllerTest {
         vehicleInfoAddlController = new VehicleInfoAddlController(vehicleInfoAddlService);
     }
 
-    @Test
-    public void contextLoads() throws Exception {
-        Assertions.assertThat(vehicleInfoAddlController).isNotNull();
-    }
+//    @Test
+//    public void contextLoads() throws Exception {
+//        Assertions.assertThat(vehicleInfoAddlController).isNotNull();
+//    }
 
     @Test
     public void create_vehicle_info_addl_success() throws JsonProcessingException {
@@ -42,7 +42,7 @@ public class VehicleInfoAddlControllerTest {
         doReturn(vehicleInfoAddl).when(vehicleInfoAddlService).create("fasdg");
         ResponseEntity<String> created = vehicleInfoAddlController.createVehicleInfoAddlByVinA("fasdg");
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created.getBody(), vehicleInfoAddl.toString() );
+        Assertions.assertEquals(created.getBody(), vehicleInfoAddl.toString() );
     }
 
     @Test
@@ -55,7 +55,7 @@ public class VehicleInfoAddlControllerTest {
         ResponseEntity<String> created = vehicleInfoAddlController.createVehicleInfoAddlByVinA("fasdg");
         // then
 //        org.junit.jupiter.api.Assertions.assertEquals(created.getBody(), "Invalid vin. Entity not created." );
-        org.junit.jupiter.api.Assertions.assertEquals(created.getStatusCode(), HttpStatus.BAD_REQUEST );
+        Assertions.assertEquals(created.getStatusCode(), HttpStatus.BAD_REQUEST );
     }
 
     @Test
@@ -67,7 +67,7 @@ public class VehicleInfoAddlControllerTest {
         doReturn(Optional.ofNullable(vehicleInfoAddl)).when(vehicleInfoAddlService).getVehicleInfoAddlByVinA("fasdg");
         ResponseEntity<String> created = vehicleInfoAddlController.getVehicleInfoAddlByVinA("fasdg");
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created.getBody(), vehicleInfoAddl.toString() );
+        Assertions.assertEquals(created.getBody(), vehicleInfoAddl.toString() );
     }
 
     @Test
@@ -77,8 +77,8 @@ public class VehicleInfoAddlControllerTest {
         // when
         ResponseEntity<String> created = vehicleInfoAddlController.getVehicleInfoAddlByVinA("fasdg");
         // then
-//        org.junit.jupiter.api.Assertions.assertEquals(created.getBody(), "Entity not found." );
-        org.junit.jupiter.api.Assertions.assertEquals(created.getStatusCode(), HttpStatus.BAD_REQUEST );
+//        org.junit.jupiter.api.Assertions.assertEquals(created.getBody(), "Entity not found" );
+        Assertions.assertEquals(created.getStatusCode(), HttpStatus.BAD_REQUEST );
     }
 
     @Test
@@ -90,7 +90,7 @@ public class VehicleInfoAddlControllerTest {
         doReturn(Optional.ofNullable(vehicleInfoAddl)).when(vehicleInfoAddlService).getVehicleInfoAddlById(1);
         ResponseEntity<String> created = vehicleInfoAddlController.getVehicleInfoAddlById(1);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created.getBody(), vehicleInfoAddl.toString() );
+        Assertions.assertEquals(created.getBody(), vehicleInfoAddl.toString() );
     }
 
     @Test
@@ -100,8 +100,8 @@ public class VehicleInfoAddlControllerTest {
         // when
         ResponseEntity<String> created = vehicleInfoAddlController.getVehicleInfoAddlById(1);
         // then
-//        org.junit.jupiter.api.Assertions.assertEquals(created.getBody(), "Entity not found." );
-        org.junit.jupiter.api.Assertions.assertEquals(created.getStatusCode(), HttpStatus.BAD_REQUEST );
+//        org.junit.jupiter.api.Assertions.assertEquals(created.getBody(), "Entity not found" );
+        Assertions.assertEquals(created.getStatusCode(), HttpStatus.BAD_REQUEST );
     }
 
     @Test
@@ -111,7 +111,31 @@ public class VehicleInfoAddlControllerTest {
         // when
         ResponseEntity<String> created = vehicleInfoAddlController.deleteVehicleInfoAddlById(1);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created.getBody(), "Ok" );
+        Assertions.assertEquals(created.getBody(), "Ok" );
+    }
+
+    @Test
+    public void update_vehicle_info_addl_success() {
+        // given
+        Date date = new Date(System.currentTimeMillis());
+        VehicleInfoAddl vehicleInfoAddl = new VehicleInfoAddl(1,"fasdg","ferrari", "F40",1991,"ferrari","f40","the best one", "really cool","coupe",2,109.3F,"right",1,1,"",1,1,"","","",1,date,null,null,1,"a");
+        doReturn(vehicleInfoAddl).when(vehicleInfoAddlService).updateVehicleInfoAddl(vehicleInfoAddl);
+        // when
+        ResponseEntity<String> gotten = vehicleInfoAddlController.updateVehicleInfoAddl(vehicleInfoAddl);
+        // then
+        Assertions.assertEquals(gotten.getBody(),vehicleInfoAddl.toString());
+    }
+
+    @Test
+    public void update_vehicle_info_addl_fails() {
+        // given
+        Date date = new Date(System.currentTimeMillis());
+        VehicleInfoAddl vehicleInfoAddl = new VehicleInfoAddl(1,"fasdg","ferrari", "F40",1991,"ferrari","f40","the best one", "really cool","coupe",2,109.3F,"right",1,1,"",1,1,"","","",1,date,null,null,1,"a");
+        doReturn(null).when(vehicleInfoAddlService).updateVehicleInfoAddl(vehicleInfoAddl);
+        // when
+        ResponseEntity<String> gotten = vehicleInfoAddlController.updateVehicleInfoAddl(vehicleInfoAddl);
+        // then
+        Assertions.assertEquals(gotten.getBody(),"Failed to update Entity");
     }
 
     @Test
@@ -121,6 +145,6 @@ public class VehicleInfoAddlControllerTest {
         // when
         ResponseEntity<String> created = vehicleInfoAddlController.deleteVehicleInfoAddlById(1);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created.getStatusCode(), HttpStatus.BAD_REQUEST );
+        Assertions.assertEquals(created.getStatusCode(), HttpStatus.BAD_REQUEST );
     }
 }

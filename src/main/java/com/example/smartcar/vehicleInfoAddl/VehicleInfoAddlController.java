@@ -1,20 +1,16 @@
 package com.example.smartcar.vehicleInfoAddl;
 
 
-import com.example.smartcar.location.Location;
-import com.example.smartcar.location.LocationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("vehicle/info/addl")
+@RequestMapping("/vehicle/info/addl")
 public class VehicleInfoAddlController {
+
 
     private final VehicleInfoAddlService  vehicleInfoAddlService;
 
@@ -29,7 +25,7 @@ public class VehicleInfoAddlController {
         if (vehicleInfoAddl.isPresent())
             return ResponseEntity.ok(vehicleInfoAddl.get().toString());
         else
-            return new ResponseEntity<>("Entity not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Entity not found", HttpStatus.BAD_REQUEST);
 
 
 
@@ -43,7 +39,7 @@ public class VehicleInfoAddlController {
         if (vehicleInfoAddl.isPresent())
             return ResponseEntity.ok(vehicleInfoAddl.get().toString());
         else
-            return new ResponseEntity<>("Entity not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Entity not found", HttpStatus.BAD_REQUEST);
 
 
 
@@ -56,10 +52,20 @@ public class VehicleInfoAddlController {
 //        if (!vehicleInfoAddl.isPresent())
             String success = vehicleInfoAddlService.deleteById(id);
 
-            if (success == "Ok")
+//            if (success == "Ok")
                 return  new ResponseEntity<>(success, HttpStatus.OK);
-            else
-                return new ResponseEntity<>(success, HttpStatus.BAD_REQUEST);
+//            else
+//                return new ResponseEntity<>(success, HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateVehicleInfoAddl(@RequestParam VehicleInfoAddl vehicleInfoAddl) {
+        VehicleInfoAddl updated = vehicleInfoAddlService.updateVehicleInfoAddl(vehicleInfoAddl);
+
+        if (updated != null)
+            return ResponseEntity.ok(updated.toString());
+        else
+            return new ResponseEntity<>("Failed to update Entity", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/create/{vin}")

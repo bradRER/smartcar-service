@@ -1,17 +1,17 @@
 package com.example.smartcar.vehicleInfoAddl;
 
-//import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface VehicleInfoAddlRepository extends CrudRepository<VehicleInfoAddl, Integer> {
+
+
     Optional<VehicleInfoAddl> findByVinA(String vin);
 
+
+    VehicleInfoAddl update(VehicleInfoAddl vehicleInfoAddl);
 //    @Query(value = 'select id, vin_a, make_a, model_a, year_a, mfg_name, series, vehicle_type, body_class, doors, wheel_base, steering_location, nbr_of_seats, nbr_of_seat_rows, transmission_style, transmission_speeds, axles, fuel_type_primary, electrification_level, other_engine_info, created_at, created_by, modified_at, modified_by, telematics_request_id, telematics_request_server_id from vehicle_info_addl where vin_a = ?1')
 //    public Optional<VehicleInfoAddl> findByVinA(String vin){}
 

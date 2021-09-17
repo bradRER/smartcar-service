@@ -12,26 +12,32 @@ import java.util.*;
 @Service
 public class VehicleInfoAddlService {
 
-    private final VehicleInfoAddlRepository repository;
+    private final VehicleInfoAddlRepository vehicleInfoAddlRepository;
     @Autowired
     public VehicleInfoAddlService(VehicleInfoAddlRepository repository) {
-        this.repository = repository;
+        this.vehicleInfoAddlRepository = repository;
     }
 
 
 
     public Optional<VehicleInfoAddl> getVehicleInfoAddlById(Integer id) {
-        return repository.findById(id);
+        return vehicleInfoAddlRepository.findById(id);
     }
 
     public Optional<VehicleInfoAddl> getVehicleInfoAddlByVinA(String vin) {
-        return repository.findByVinA(vin);
+        return vehicleInfoAddlRepository.findByVinA(vin);
+    }
+
+    public VehicleInfoAddl updateVehicleInfoAddl(VehicleInfoAddl vehicleInfoAddl) {
+        VehicleInfoAddl updated = vehicleInfoAddlRepository.update(vehicleInfoAddl);
+
+        return updated;
     }
 
     public String deleteById(Integer id) {
-        Optional<VehicleInfoAddl> vehicleInfoAddl = repository.findById(id);
+        Optional<VehicleInfoAddl> vehicleInfoAddl = vehicleInfoAddlRepository.findById(id);
         if (vehicleInfoAddl.isPresent() ) {
-            repository.delete(vehicleInfoAddl.get());
+            vehicleInfoAddlRepository.delete(vehicleInfoAddl.get());
             return "Ok";
         } else return "Error";
 
@@ -68,7 +74,7 @@ public class VehicleInfoAddlService {
             if (vehicleInfoAddl.getMakeA() != null &&
                     vehicleInfoAddl.getModelA() != null &&
                     vehicleInfoAddl.getYearA() != null)  {
-                repository.save(vehicleInfoAddl);
+                vehicleInfoAddlRepository.save(vehicleInfoAddl);
             }
 
         return vehicleInfoAddl;
@@ -87,7 +93,7 @@ public class VehicleInfoAddlService {
 //                        "VariableId": 25
 //                }
 
-            JsonNode node = IterNode.next(); // .asText("Variable");
+            JsonNode node = IterNode.next();
             String switcher = node.get("Variable").asText();
             String nuller = ""; // nuller keeps fields null instead of "null"
             switch ( switcher) {
@@ -180,5 +186,6 @@ public class VehicleInfoAddlService {
         return vin;
 //        return vin.substring(0,8) + "*" + vin.substring(vin.length()-2);
     }
+
 
 }
