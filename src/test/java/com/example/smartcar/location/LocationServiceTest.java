@@ -1,12 +1,17 @@
 package com.example.smartcar.location;
 
+import com.smartcar.sdk.SmartcarException;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
 
@@ -29,26 +34,37 @@ public class LocationServiceTest {
     }
 
     @Test
-    public void create_location_success() {
+    public void create_location_success() throws SmartcarException {
         // given
         Location locationRecord = new Location();
-        locationRecord.setLatitude(42.010101010);
-        locationRecord.setLongitude(-71.0000583618164);
+        String vehicleNumber = "numbers are strings";
+        String accessToken = "let me in";
+        Timestamp accessTokenExpiration = Timestamp.from(Instant.now());
+        String refreshToken = "please let me in";
+        Timestamp refreshTokenExpiration = Timestamp.from(Instant.now());
+        Integer makeModelDataSource = 2; // 1 for smartcar
         // when
         doReturn(locationRecord).when(locationRepository).save(any());
-        Location created = locationService.createLocation(locationRecord.getLatitude(), locationRecord.getLongitude());
+        Location created = locationService.createLocation(vehicleNumber,accessToken,accessTokenExpiration,refreshToken,refreshTokenExpiration,makeModelDataSource);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(locationRecord, created);
+        Assertions.assertEquals(locationRecord, created);
     }
 
     @Test
-    public void create_location_fails() {
+    public void create_location_fails() throws SmartcarException {
         // given
-        doReturn(null).when(locationRepository).save(any());
+        Location locationRecord = new Location();
+        String vehicleNumber = "numbers are strings";
+        String accessToken = "let me in";
+        Timestamp accessTokenExpiration = Timestamp.from(Instant.now());
+        String refreshToken = "please let me in";
+        Timestamp refreshTokenExpiration = Timestamp.from(Instant.now());
+        Integer makeModelDataSource = 2; // 1 for smartcar
         // when
-        Location created = locationService.createLocation(42D, -71D);
+        doReturn(null).when(locationRepository).save(any());
+        Location created = locationService.createLocation(vehicleNumber,accessToken,accessTokenExpiration,refreshToken,refreshTokenExpiration,makeModelDataSource);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(created, null);
+        Assertions.assertEquals(null, created);
     }
 
     @Test
@@ -60,7 +76,7 @@ public class LocationServiceTest {
         doReturn(Optional.ofNullable(locationRecord)).when(locationRepository).findById(1);
         Optional<Location> created = locationService.findById(1);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(locationRecord, created.get());
+        Assertions.assertEquals(locationRecord, created.get());
     }
     @Test
     public void get_location_fails() {
@@ -69,7 +85,52 @@ public class LocationServiceTest {
         // when
         Optional<Location> gotten = locationService.findById(1);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(gotten,Optional.empty());
+        Assertions.assertEquals(gotten,Optional.empty());
+    }
+
+    @Test
+    public void get_location_by_telematics_request_id_success() {
+        // given
+        Date date = new Date(System.currentTimeMillis());
+        Location locationRecord = new Location(1,42,-71,date,"12",12,date,null,null,12,"12");
+        // when
+        doReturn(Optional.ofNullable(locationRecord)).when(locationRepository).findByTelematicsRequestId(1);
+        Optional<Location> created = locationService.findByTelematicsRequestId(1);
+        // then
+        Assertions.assertEquals(locationRecord, created.get());
+    }
+    @Test
+    public void get_location_telematics_request_id_fails() {
+        // given
+        doReturn(Optional.empty()).when(locationRepository).findByTelematicsRequestId(1);
+        // when
+        Optional<Location> gotten = locationService.findByTelematicsRequestId(1);
+        // then
+        Assertions.assertEquals(gotten,Optional.empty());
+    }
+
+    @Test
+    public void update_location_success() {
+        // given
+        Date date = new Date(System.currentTimeMillis());
+        Location locationRecord = new Location(1,42,-71,date,"12",12,date,null,null,12,"12");
+        doReturn(locationRecord).when(locationRepository).update(locationRecord);
+        // when
+        Location gotten = locationService.updateLocation(locationRecord);
+        // then
+        Assertions.assertEquals(gotten,locationRecord);
+    }
+
+    @Test
+    public void update_location_fails() {
+        // given
+        Date date = new Date(System.currentTimeMillis());
+        Location locationRecord = new Location(1,42,-71,date,"12",12,date,null,null,12,"12");
+        doReturn(null).when(locationRepository).update(locationRecord);
+        // when
+        Location gotten = locationService.updateLocation(locationRecord);
+        // then
+        Assertions.assertEquals(gotten,null);
     }
 
     @Test
@@ -81,7 +142,7 @@ public class LocationServiceTest {
         doReturn(Optional.ofNullable(locationRecord)).when(locationRepository).findById(locationRecord.getId());
         String gotten = locationService.deleteById(locationRecord.getId());
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(gotten,"Ok");
+        Assertions.assertEquals(gotten,"Ok");
     }
 
     @Test
@@ -91,7 +152,7 @@ public class LocationServiceTest {
         // when
         String gotten = locationService.deleteById(173);
         // then
-        org.junit.jupiter.api.Assertions.assertEquals(gotten,"Error");
+        Assertions.assertEquals(gotten,"Error");
     }
 }
 
